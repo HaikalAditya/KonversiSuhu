@@ -1,3 +1,6 @@
+
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -27,6 +30,7 @@ public class Frame extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -38,10 +42,10 @@ public class Frame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
+        btnCelcius = new javax.swing.JRadioButton();
+        btnReamur = new javax.swing.JRadioButton();
+        btnFahrenheit = new javax.swing.JRadioButton();
+        btnKelvin = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Aplikasi Konversi Suhu");
@@ -85,7 +89,7 @@ public class Frame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         jPanel1.add(lblHasil, gridBagConstraints);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- Pilih -", "Fahrenheit", "Reamur", "Kelvin" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- Pilih -", "Celcius", "Fahrenheit", "Reamur", "Kelvin" }));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -95,6 +99,11 @@ public class Frame extends javax.swing.JFrame {
 
         jButton1.setBackground(new java.awt.Color(0, 153, 153));
         jButton1.setText("Konversi");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -130,33 +139,37 @@ public class Frame extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jRadioButton1.setText("Celcius");
+        buttonGroup1.add(btnCelcius);
+        btnCelcius.setText("Celcius");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel2.add(jRadioButton1, gridBagConstraints);
+        jPanel2.add(btnCelcius, gridBagConstraints);
 
-        jRadioButton2.setText("Reamour");
+        buttonGroup1.add(btnReamur);
+        btnReamur.setText("Reamur");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel2.add(jRadioButton2, gridBagConstraints);
+        jPanel2.add(btnReamur, gridBagConstraints);
 
-        jRadioButton3.setText("Fahrenheit");
+        buttonGroup1.add(btnFahrenheit);
+        btnFahrenheit.setText("Fahrenheit");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel2.add(jRadioButton3, gridBagConstraints);
+        jPanel2.add(btnFahrenheit, gridBagConstraints);
 
-        jRadioButton4.setText("Kelvin");
+        buttonGroup1.add(btnKelvin);
+        btnKelvin.setText("Kelvin");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel2.add(jRadioButton4, gridBagConstraints);
+        jPanel2.add(btnKelvin, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -170,6 +183,89 @@ public class Frame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+           try {
+        double inputSuhu = Double.parseDouble(lblInput.getText());
+        String scale = (String) jComboBox1.getSelectedItem();
+        double result = 0.0;
+
+        if (btnCelcius.isSelected()) {
+            // Konversi ke Celcius dari skala asal
+            result = convertToCelcius(inputSuhu, scale);
+            lblHasil.setText(String.format("%.2f °C", result));
+        } else if (btnKelvin.isSelected()) {
+            // Konversi ke Kelvin dari skala asal
+            result = convertToKelvin(inputSuhu, scale);
+            lblHasil.setText(String.format("%.2f K", result));
+        } else if (btnReamur.isSelected()) {
+            // Konversi ke Reamur dari skala asal
+            result = convertToReamur(inputSuhu, scale);
+            lblHasil.setText(String.format("%.2f °Ré", result));
+        } else if (btnFahrenheit.isSelected()) {
+            // Konversi ke Fahrenheit dari skala asal
+            result = convertToFahrenheit(inputSuhu, scale);
+            lblHasil.setText(String.format("%.2f °F", result));
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Masukkan nilai suhu yang valid!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    //Proses Konversi
+    private double convertToCelcius(double suhu, String scale) {
+    switch (scale) {
+        case "Kelvin":
+            return suhu - 273.15;
+        case "Reamur":
+            return suhu * 5/4;
+        case "Fahrenheit":
+            return (suhu - 32) * 5/9;
+        default:
+            return suhu; // Sudah dalam Celcius
+    }
+    }
+
+    private double convertToKelvin(double suhu, String scale) {
+    switch (scale) {
+        case "Celcius":
+            return suhu + 273.15;
+        case "Reamur":
+            return (suhu * 5/4) + 273.15;
+        case "Fahrenheit":
+            return (suhu - 32) * 5/9 + 273.15;
+        default:
+            return suhu; // Sudah dalam Kelvin
+    }
+    }
+
+    private double convertToReamur(double suhu, String scale) {
+    switch (scale) {
+        case "Celcius":
+            return suhu * 4/5;
+        case "Kelvin":
+            return (suhu - 273.15) * 4/5;
+        case "Fahrenheit":
+            return (suhu - 32) * 4/9;
+        default:
+            return suhu; // Sudah dalam Reamur
+    }
+    }
+
+    private double convertToFahrenheit(double suhu, String scale) {
+    switch (scale) {
+        case "Celcius":
+            return (suhu * 9/5) + 32;
+        case "Kelvin":
+            return (suhu - 273.15) * 9/5 + 32;
+        case "Reamur":
+            return (suhu * 9/4) + 32;
+        default:
+            return suhu; // Sudah dalam Fahrenheit
+    }
+    }
+    //tutup
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -206,6 +302,11 @@ public class Frame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton btnCelcius;
+    private javax.swing.JRadioButton btnFahrenheit;
+    private javax.swing.JRadioButton btnKelvin;
+    private javax.swing.JRadioButton btnReamur;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
@@ -215,10 +316,6 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JTextField lblHasil;
     private javax.swing.JTextField lblInput;
     // End of variables declaration//GEN-END:variables
