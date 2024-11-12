@@ -18,6 +18,22 @@ public class Frame extends javax.swing.JFrame {
      */
     public Frame() {
         initComponents();
+         lblInput.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        @Override
+        public void insertUpdate(javax.swing.event.DocumentEvent e) {
+            updateConversionResult();
+        }
+
+        @Override
+        public void removeUpdate(javax.swing.event.DocumentEvent e) {
+            updateConversionResult();
+        }
+
+        @Override
+        public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            updateConversionResult();
+        }
+    });
     }
 
     /**
@@ -76,6 +92,16 @@ public class Frame extends javax.swing.JFrame {
         jPanel1.add(jLabel2, gridBagConstraints);
 
         lblInput.setName("txtNCelcius"); // NOI18N
+        lblInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lblInputActionPerformed(evt);
+            }
+        });
+        lblInput.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                lblInputKeyTyped(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -211,6 +237,18 @@ public class Frame extends javax.swing.JFrame {
     }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    
+    private void lblInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblInputActionPerformed
+
+    }//GEN-LAST:event_lblInputActionPerformed
+
+    private void lblInputKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lblInputKeyTyped
+        char c = evt.getKeyChar();
+    if (!Character.isDigit(c) && c != '.') {
+        evt.consume();  // Hanya menerima angka dan titik desimal
+    }
+    }//GEN-LAST:event_lblInputKeyTyped
+
     //Proses Konversi
     private double convertToCelcius(double suhu, String scale) {
     switch (scale) {
@@ -263,6 +301,33 @@ public class Frame extends javax.swing.JFrame {
             return suhu; // Sudah dalam Fahrenheit
     }
     }
+    //tutup
+    
+    //Proses Implementasi konversi otomatis saat nilai input berubah
+    private void updateConversionResult() {
+    try {
+        double inputSuhu = Double.parseDouble(lblInput.getText());
+        String scale = (String) jComboBox1.getSelectedItem();
+        double result = 0.0;
+
+        if (btnCelcius.isSelected()) {
+            result = convertToCelcius(inputSuhu, scale);
+            lblHasil.setText(String.format("%.2f °C", result));
+        } else if (btnKelvin.isSelected()) {
+            result = convertToKelvin(inputSuhu, scale);
+            lblHasil.setText(String.format("%.2f K", result));
+        } else if (btnReamur.isSelected()) {
+            result = convertToReamur(inputSuhu, scale);
+            lblHasil.setText(String.format("%.2f °Ré", result));
+        } else if (btnFahrenheit.isSelected()) {
+            result = convertToFahrenheit(inputSuhu, scale);
+            lblHasil.setText(String.format("%.2f °F", result));
+        }
+    } catch (NumberFormatException ex) {
+        // Jika input kosong atau tidak valid, kosongkan semua label hasil
+        lblHasil.setText("");
+    }
+}   
     //tutup
     
     
